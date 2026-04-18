@@ -700,6 +700,8 @@ void AsyncFileResponse::_setContentTypeFromPath(const String &path) {
     _contentType = T_video_webm;
   } else if (strcmp(dot, T__txt) == 0) {
     _contentType = T_text_plain;
+  } else if (strcmp(dot, T__wasm) == 0) {
+    _contentType = T_application_wasm;
   } else {
     _contentType = T_application_octet_stream;
   }
