@@ -931,7 +931,10 @@ size_t AsyncResponseStream::write(const uint8_t *data, size_t len) {
   }
   if (len > _content->room()) {
     size_t needed = len - _content->room();
-    _content->resizeAdd(needed);
+    // Gauge.S: grow by at least half the buffer. ArduinoJson prints byte by byte, and
+    // growing by only `needed` reallocated once per byte (7 KB pretty JSON: 410 ms).
+    size_t half = _content->size() / 2;
+    _content->resizeAdd(needed > half ? needed : half);
     // log a warning if allocation failed, but do not return: keep writing the bytes we can
     // with _content->write: if len is more than the available size in the buffer, only
     // the available size will be written
